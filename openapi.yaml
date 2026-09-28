@@ -1007,6 +1007,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /workhours/add:
+    post:
+      operationId: addWorkHour
+      summary: Arbeitsstunden anlegen
+      description: Anlage eines neuen Arbeitsstundendatensatzes
+      tags:
+        - Arbeitsstunden
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddWorkHourRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkHour'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2384,6 +2414,47 @@ components:
         categoryinfo:
           type: string
           description: Kategoriebezeichnung
+        comment:
+          type: string
+          description: Kommentar
+    AddWorkHourRequest:
+      type: object
+      required:
+        - accesstoken
+        - uid
+        - jobdate
+        - jobtext
+        - hours
+        - category
+      properties:
+        accesstoken:
+          type: string
+        uid:
+          type: integer
+          description: Id der Person
+        jobdate:
+          type: string
+          format: date
+          description: Datum im Format (YYYY-mm-dd)
+        jobtext:
+          type: string
+          description: Tätigkeit
+        hours:
+          type: string
+          description: Stunden im Format HH:ii
+        category:
+          type: integer
+          description: Id der Arbeitsstundenkategorie
+        timefrom:
+          type: string
+          description: Uhrzeit ab im Format HH:ii
+        timeto:
+          type: string
+          description: Uhrzeit ab im Format HH:ii
+        status:
+          type: integer
+          enum: [1, 2, 3]
+          description: 1= Angelgt, 2=Akzeptiert, 3=abgelehnt
         comment:
           type: string
           description: Kommentar
