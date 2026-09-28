@@ -407,6 +407,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/list/myflights:
+    post:
+      operationId: listMyFlights
+      summary: Meine letzten Flüge auslesen
+      description: Auflistung der letzten X Flüge zu einer Person. Es werden die Flüge als Pilot und die Flüge als FI ausgegeben.
+      tags:
+        - Flugdatenerfassung
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListMyFlightsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1056,6 +1086,19 @@ components:
           minimum: 1
           maximum: 100
           description: Anzahl der Flüge (1 – 100)
+    ListMyFlightsRequest:
+      type: object
+      required:
+        - accesstoken
+        - count
+      properties:
+        accesstoken:
+          type: string
+        count:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: Anzahl der Flüge (1 – 1000)
     FlightListResponse:
       type: object
       properties:
