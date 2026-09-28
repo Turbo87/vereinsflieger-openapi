@@ -13,6 +13,7 @@ externalDocs:
 x-source-document-date: '2026-09-11'
 tags:
   - name: Anmeldefunktionen
+  - name: Mitglieder
 paths:
   /auth/accesstoken:
     get:
@@ -120,6 +121,40 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /user/list:
+    post:
+      operationId: listMembers
+      summary: Auslesen der Mitgliederliste
+      description: |-
+        Auslesen der Mitgliederliste
+
+        Hinweis: Das Recht ‚Mitgliederdaten bearbeiten‘ wird benötigt.
+      tags:
+        - Mitglieder
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListMembersRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberListResponse'
+          x-verification:
+            basis: documentation
+            observedAt: '2026-09-28'
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -218,3 +253,211 @@ components:
         email:
           type: string
           description: E-Mail-Adresse
+    ListMembersRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    MemberListResponse:
+      type: object
+      required:
+        - httpstatuscode
+      properties:
+        httpstatuscode:
+          type: integer
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/Member'
+    Member:
+      type: object
+      required:
+        - uid
+      properties:
+        uid:
+          type: string
+          description: Interne ID
+        title:
+          type: string
+          description: Titel
+        firstname:
+          type: string
+          description: Vorname
+        lastname:
+          type: string
+          description: Nachname
+        nickname:
+          type: string
+          description: Spitzname
+        careof:
+          type: string
+          description: Adresszusatz
+        street:
+          type: string
+          description: Straße
+        postofficebox:
+          type: string
+          description: Postfach
+        zipcode:
+          type: string
+          description: PLZ
+        town:
+          type: string
+          description: Ort
+        email:
+          type: string
+          description: Mailadresse
+        gender:
+          type: string
+          description: Geschlecht (m, w)
+        birthday:
+          type: string
+          description: Geburtsdatum
+        birthplace:
+          type: string
+          description: Geburtsort
+        homenumber:
+          type: string
+          description: Telefon (privat)
+        mobilenumber:
+          type: string
+          description: Mobil (privat)
+        phonenumber:
+          type: string
+          description: Telefon (gesch.)
+        phonenumber2:
+          type: string
+          description: Mobil (gesch.)
+        carlicenseplate:
+          type: string
+          description: Autokennzeichen
+        identification:
+          type: string
+          description: Ausweisnummer
+        natoid:
+          type: string
+          description: NatoID
+        policecert_validto:
+          type: string
+          description: Führungszeugnis
+        ice_contact1:
+          type: string
+          description: Notfallkontakt 1
+        ice_contact2:
+          type: string
+          description: Notfallkontakt 2
+        memberid:
+          type: string
+          description: MitgliedsNr
+        memberbegin:
+          type: string
+          description: Eintrittsdatum
+        memberend:
+          type: string
+          description: Austrittsdatum
+        lettertitle:
+          type: string
+          description: Briefanrede
+        memberstatus:
+          type: string
+          description: Mitgliedsstatus
+        country:
+          type: string
+          description: Land
+        bankaccountname:
+          type: string
+          description: Kontoinhaber
+        directdebitauth:
+          type: integer
+          description: Lastschrift ja = 1
+        iban:
+          type: string
+          description: IBAN
+        bic:
+          type: string
+          description: BIC
+        mandate:
+          type: string
+          description: Mandat
+        roles:
+          type: array
+          description: Zugeordnete Rollen
+          items:
+            type: string
+        mandatedate:
+          type: string
+          description: Mandatsdatum
+        mailrecipient:
+          type: string
+          description: Rundmailempfänger
+        sector:
+          type: array
+          description: Zugeordnete Sparten
+          items:
+            type: string
+        functions:
+          type: array
+          description: Zugeordnete Funktionen
+          items:
+            type: string
+        educations:
+          type: array
+          description: Nicht beendete Lehrpläne
+          items:
+            type: string
+        accounts:
+          type: array
+          description: Liste der Sachkonten
+          items:
+            $ref: '#/components/schemas/MemberAccount'
+        keymanagement:
+          type: array
+          description: Liste der zugeordneten Schlüssel
+          items:
+            $ref: '#/components/schemas/MemberKey'
+        stateassociation:
+          description: Mitgliedsstatus im Landesverband
+          oneOf:
+            - type: array
+              items:
+                $ref: '#/components/schemas/StateAssociationMembership'
+            - type: object
+              additionalProperties:
+                $ref: '#/components/schemas/StateAssociationMembership'
+      patternProperties:
+        '^prop[0-9]+$':
+          $ref: '#/components/schemas/MemberProperty'
+    MemberProperty:
+      type: object
+      description: Weitere Eigenschaft mit Bezeichnung und Wert
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+    MemberAccount:
+      type: object
+      properties:
+        accounttype:
+          type: string
+        name:
+          type: string
+        shortname:
+          type: string
+    MemberKey:
+      type: object
+      properties:
+        keyname:
+          type: string
+        rfidkey:
+          type: string
+        title:
+          type: string
+    StateAssociationMembership:
+      type: object
+      properties:
+        msid:
+          type: string
+        name:
+          type: string
