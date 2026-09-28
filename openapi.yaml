@@ -946,6 +946,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /account/list/daterange:
+    post:
+      operationId: listBookingsByDateRange
+      summary: Alle Buchungen für einem Zeitraum auslesen
+      description: Auslesen aller Buchungen deren Buchungsdatum in einem bestimmten Zeitraum liegen.
+      tags:
+        - Finanzen - Buchungen
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListBookingsByDateRangeRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2238,3 +2268,20 @@ components:
         year:
           type: integer
           description: Buchungsjahr
+    ListBookingsByDateRangeRequest:
+      type: object
+      required:
+        - accesstoken
+        - datefrom
+        - dateto
+      properties:
+        accesstoken:
+          type: string
+        datefrom:
+          type: string
+          format: date
+          description: Datum im Format YYYY-mm-dd
+        dateto:
+          type: string
+          format: date
+          description: Datum im Format YYYY-mm-dd
