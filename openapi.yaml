@@ -19,6 +19,7 @@ tags:
   - name: Reservierungen
   - name: Instandhaltung
   - name: Finanzen - Buchungen
+  - name: Arbeitsstunden
 paths:
   /auth/accesstoken:
     get:
@@ -966,6 +967,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookingListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+  /workhours/list/daterange:
+    post:
+      operationId: listWorkHoursByDateRange
+      summary: Arbeitsstunden auslesen
+      description: Auslesen aller Arbeitsstunden deren Datum in einem bestimmten Zeitraum liegen.
+      tags:
+        - Arbeitsstunden
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListWorkHoursByDateRangeRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkHourListResponse'
           x-verification:
             basis: inference
         '400':
@@ -2285,3 +2316,74 @@ components:
           type: string
           format: date
           description: Datum im Format YYYY-mm-dd
+    ListWorkHoursByDateRangeRequest:
+      type: object
+      required:
+        - accesstoken
+        - datefrom
+        - dateto
+      properties:
+        accesstoken:
+          type: string
+        datefrom:
+          type: string
+          format: date
+          description: Datum im Format YYYY-mm-dd
+        dateto:
+          type: string
+          format: date
+          description: Datum im Format YYYY-mm-dd
+    WorkHourListResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/WorkHour'
+    WorkHour:
+      type: object
+      properties:
+        whid:
+          type: integer
+          description: Eindeutige ID
+        createtime:
+          type: string
+          description: Erstellungsdatum
+        modifytime:
+          type: string
+          description: Letzte Änderung
+        uid:
+          type: integer
+          description: ID des Person
+        username:
+          type: string
+          description: Name
+        jobdate:
+          type: string
+          format: date
+          description: Arbeitsstundendatum
+        jobtext:
+          type: string
+          description: Durchgeführte Tätigkeit
+        hours:
+          type: string
+          description: Dauer der Arbeit
+        timefrom:
+          type: string
+          description: Zeitraum von
+        timeto:
+          type: string
+          description: Zeitraum bis
+        status:
+          type: integer
+          description: Stautus
+        statusinfo:
+          type: string
+          description: Statusbezeichnung
+        category:
+          type: integer
+          description: Kategorie
+        categoryinfo:
+          type: string
+          description: Kategoriebezeichnung
+        comment:
+          type: string
+          description: Kommentar
