@@ -1341,6 +1341,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /voucher/changestatus:
+    post:
+      operationId: changeVoucherStatus
+      summary: Gutschein - Statusänderung
+      description: Aktualisierung des Gutscheinstatus
+      tags:
+        - Gutscheine
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangeVoucherStatusRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voucher'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -3154,3 +3184,21 @@ components:
       then:
         required:
           - lastname
+    ChangeVoucherStatusRequest:
+      type: object
+      required:
+        - accesstoken
+        - voucherid
+        - status
+      properties:
+        accesstoken:
+          type: string
+        voucherid:
+          type: string
+          description: Gutscheinnummer
+        status:
+          type: integer
+          enum: [1, 2, 3, 4, 5, 6]
+          description: >-
+            Neuer Status: 1 = "Erstellt", 2 = "Aktiviert", 6 = "Teilw. eingelöst",
+            3 = "Eingelöst", 4 = "Abgelaufen", 5 = "Storniert"
