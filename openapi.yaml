@@ -886,6 +886,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /account/list/today:
+    post:
+      operationId: listTodayBookings
+      summary: Alle Buchungen mit heutigem Buchungsdatum auslesen
+      description: Auslesen aller Buchungen, die das aktuelle Datum als Buchungsdatum haben.
+      tags:
+        - Finanzen - Buchungen
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListTodayBookingsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2155,3 +2185,15 @@ components:
         spid:
           type: integer
           description: Sphäre
+    ListTodayBookingsRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    BookingListResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/Booking'
