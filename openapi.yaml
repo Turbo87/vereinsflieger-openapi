@@ -467,6 +467,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/list/modified:
+    post:
+      operationId: listModifiedFlights
+      summary: Zuletzt geänderte Flüge auslesen
+      description: Auflistung der Flüge die in den letzten X Tagen geändert wurden.
+      tags:
+        - Flugdatenerfassung
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListModifiedFlightsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1146,6 +1176,19 @@ components:
           minimum: 1
           maximum: 100
           description: Anzahl der Flüge (1 – 100)
+    ListModifiedFlightsRequest:
+      type: object
+      required:
+        - accesstoken
+        - days
+      properties:
+        accesstoken:
+          type: string
+        days:
+          type: integer
+          minimum: 1
+          maximum: 28
+          description: Anzahl der Tage (1 – 28)
     FlightListResponse:
       type: object
       properties:
