@@ -687,6 +687,39 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /calendar/delete/{apoid}:
+    delete:
+      operationId: deleteAppointment
+      summary: Termin Löschen
+      description: Löschen eines Termins
+      tags:
+        - Kalender und Termine
+      parameters:
+        - name: apoid
+          in: path
+          required: true
+          description: Eindeutige ID des Termins
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeleteAppointmentRequest'
+      responses:
+        '200':
+          description: Erfolgreich. Die Antwort hat keinen Inhalt.
+          x-verification:
+            basis: documentation
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1699,3 +1732,10 @@ components:
               type: string
             dateto:
               type: string
+    DeleteAppointmentRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
