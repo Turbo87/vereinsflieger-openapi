@@ -94,6 +94,32 @@ paths:
           description: Abmeldung erfolgreich
           x-verification:
             basis: documentation
+  /auth/getuser:
+    post:
+      operationId: getUser
+      summary: Benutzerinformationen
+      description: Daten zum angemeldeten Benutzer ermitteln
+      tags:
+        - Anmeldefunktionen
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GetUserRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInformationResponse'
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -145,3 +171,50 @@ components:
         need_2fa:
           type: integer
           description: 1, wenn der Benutzer die Zwei-Faktor-Authentifizierung aktiviert hat.
+    GetUserRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    UserInformationResponse:
+      type: object
+      required:
+        - uid
+        - firstname
+        - lastname
+        - memberid
+        - status
+        - roles
+        - sector
+        - email
+      properties:
+        uid:
+          type: integer
+          description: Eindeutige Id im Vereinsflieger
+        firstname:
+          type: string
+          description: Vorname
+        lastname:
+          type: string
+          description: Nachname
+        memberid:
+          type: string
+          description: Mitgliedsnr
+        status:
+          type: string
+          description: Mitgliedsstatus
+        roles:
+          type: array
+          description: Zugeordnete Rollen
+          items:
+            type: string
+        sector:
+          type: array
+          description: Zugeordnete Sparte(n)
+          items:
+            type: string
+        email:
+          type: string
+          description: E-Mail-Adresse
