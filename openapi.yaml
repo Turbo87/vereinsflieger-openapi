@@ -849,6 +849,43 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /account/edit/{adid}:
+    put:
+      operationId: editBooking
+      summary: Buchung bearbeiten
+      description: Bearbeiten einer vorhandenen Buchung.
+      tags:
+        - Finanzen - Buchungen
+      parameters:
+        - name: adid
+          in: path
+          required: true
+          description: Eindeutige Buchungsnummer
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EditBookingRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2038,6 +2075,48 @@ components:
         - bookingtext
         - costtype
         - spid
+      properties:
+        accesstoken:
+          type: string
+        bookingdate:
+          type: string
+          format: date
+          description: Buchungsdatum im Format (YYYY-mm-dd)
+        value:
+          type: number
+          exclusiveMinimum: 0
+          description: Bruttobetrag(muss > 0,00 sein)
+        salestax:
+          type: number
+          description: Mehrwertsteuer in % (gültiger MwSt- Eintrag aus den Stammdaten)
+        debitaccount:
+          type: string
+          description: Sachkontennummer Sollkonto
+        creditaccount:
+          type: string
+          description: Sachkontennummer Habenkonto
+        taxaccount:
+          type: string
+          description: Sachkontennummer Steuerkonto
+        accountreference:
+          type: string
+          description: Belegart (Kurzbezeichnung aus den Stammdaten)
+        accountreferenceid:
+          type: integer
+          description: Belegnr
+        bookingtext:
+          type: string
+          description: Buchungstext
+        costtype:
+          type: string
+          description: Gebührenbereich
+        spid:
+          type: integer
+          description: Sphäre
+    EditBookingRequest:
+      type: object
+      required:
+        - accesstoken
       properties:
         accesstoken:
           type: string
