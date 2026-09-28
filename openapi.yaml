@@ -186,6 +186,43 @@ paths:
           description: Nicht authentifiziert
           x-verification:
             basis: documentation
+  /flight/edit/{flid}:
+    put:
+      operationId: editFlight
+      summary: Flug bearbeiten
+      description: Bearbeiten eines Fluges
+      tags:
+        - Flugdatenerfassung
+      parameters:
+        - name: flid
+          in: path
+          required: true
+          description: Eindeutige Flugnummer
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EditFlightRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
   /flight/get/{flid}:
     post:
       operationId: getFlight
@@ -653,6 +690,15 @@ components:
             blocktime:
               type: integer
               description: Blockzeit in Minuten (optional)
+    EditFlightRequest:
+      allOf:
+        - $ref: '#/components/schemas/FlightWriteFields'
+        - type: object
+          required:
+            - accesstoken
+          properties:
+            accesstoken:
+              type: string
     GetFlightRequest:
       type: object
       required:
