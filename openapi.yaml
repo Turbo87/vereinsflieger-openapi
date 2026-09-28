@@ -16,6 +16,7 @@ tags:
   - name: Mitglieder
   - name: Flugdatenerfassung
   - name: Kalender und Termine
+  - name: Reservierungen
 paths:
   /auth/accesstoken:
     get:
@@ -718,6 +719,32 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+  /reservation/list/active:
+    post:
+      operationId: listActiveReservations
+      summary: Aktuelle Reservierungen auslesen
+      description: Auslesen der Reservierungen
+      tags:
+        - Reservierungen
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListActiveReservationsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
           x-verification:
             basis: documentation
 components:
@@ -1739,3 +1766,75 @@ components:
       properties:
         accesstoken:
           type: string
+    ListActiveReservationsRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    ReservationListResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/Reservation'
+    Reservation:
+      type: object
+      properties:
+        prid:
+          type: integer
+          description: ReservierungsId
+        datefrom:
+          type: string
+          description: Beginn der Reservierung
+        dateto:
+          type: string
+          description: Ende der Reservierung
+        comment:
+          type: string
+          description: Kommentar
+        freeseats:
+          type: integer
+          description: Freie Sitze
+        uid:
+          type: integer
+          description: Eindeutige id des Piloten
+        user:
+          type: string
+          description: Pilot
+        uidfi:
+          type: integer
+          description: Eindeutige id des Fluglehrers
+        fi:
+          type: string
+          description: Fluglehrer
+        type:
+          type: string
+          description: Art der Reservierung
+        ressource:
+          type: string
+          description: Bezeichnung der Ressource
+        daterange:
+          type: string
+          description: Zeitraum im Klartext
+        duration:
+          type: string
+          description: Dauer im Klartext
+        createtime:
+          type: string
+          description: Erstellungszeitpunkt
+        uidcreate:
+          type: integer
+          description: uid des Erstellers
+        modifytime:
+          type: string
+          description: Zeitpunkt der letzten Änderung
+        uidmodify:
+          type: integer
+          description: uid der der Person, die die letzte Änderung gemacht hat
+        defaultairport:
+          type: string
+          description: Standardflugplatz des LFZ in der Reservierung
+        estimatedflighttime:
+          type: string
+          description: Geplante Flugzeit
