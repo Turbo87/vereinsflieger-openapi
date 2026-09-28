@@ -916,6 +916,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /account/list/year:
+    post:
+      operationId: listYearBookings
+      summary: Alle Buchungen zu einem Jahr auslesen
+      description: Auslesen aller Buchungen, die in einem bestimmten Jahr liegen.
+      tags:
+        - Finanzen - Buchungen
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListYearBookingsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2197,3 +2227,14 @@ components:
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/Booking'
+    ListYearBookingsRequest:
+      type: object
+      required:
+        - accesstoken
+        - year
+      properties:
+        accesstoken:
+          type: string
+        year:
+          type: integer
+          description: Buchungsjahr
