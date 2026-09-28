@@ -223,6 +223,39 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/delete/{flid}:
+    delete:
+      operationId: deleteFlight
+      summary: Flug löschen
+      description: Flug löschen
+      tags:
+        - Flugdatenerfassung
+      parameters:
+        - name: flid
+          in: path
+          required: true
+          description: Eindeutige Flugnummer
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeleteFlightRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          x-verification:
+            basis: documentation
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
   /flight/get/{flid}:
     post:
       operationId: getFlight
@@ -699,6 +732,13 @@ components:
           properties:
             accesstoken:
               type: string
+    DeleteFlightRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
     GetFlightRequest:
       type: object
       required:
