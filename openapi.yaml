@@ -256,6 +256,28 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/jointowflights:
+    put:
+      operationId: joinTowFlights
+      summary: F-Schlepp Flüge verbinden
+      description: Zwei Flüge zu einem F-Schlepp verbinden
+      tags:
+        - Flugdatenerfassung
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JoinTowFlightsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert oder Fehler beim zusammenführen (z.B. Flug nicht gefunden, Kein SchleppLFZ, Schlepp bereits verbunden …)
+          x-verification:
+            basis: documentation
   /flight/get/{flid}:
     post:
       operationId: getFlight
@@ -737,6 +759,21 @@ components:
       required:
         - accesstoken
       properties:
+        accesstoken:
+          type: string
+    JoinTowFlightsRequest:
+      type: object
+      required:
+        - flid
+        - flidtow
+        - accesstoken
+      properties:
+        flid:
+          type: integer
+          description: Eindeutige Flugnummer
+        flidtow:
+          type: integer
+          description: Eindeutige Flugnummer
         accesstoken:
           type: string
     GetFlightRequest:
