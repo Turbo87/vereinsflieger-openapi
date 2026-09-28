@@ -21,6 +21,7 @@ tags:
   - name: Finanzen - Buchungen
   - name: Arbeitsstunden
   - name: Allgemeiner Verkauf
+  - name: Datensicherung
 paths:
   /auth/accesstoken:
     get:
@@ -1240,6 +1241,37 @@ paths:
                 $ref: '#/components/schemas/Sale'
           x-verification:
             basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+  /backup/getzip:
+    get:
+      operationId: getBackupZip
+      summary: Datensicherungsdatei abrufen
+      description: Datensicherungsdatei abrufen
+      tags:
+        - Datensicherung
+      parameters:
+        - name: accesstoken
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+          x-verification:
+            basis: documentation
         '400':
           description: Ungültige Anfrage
           x-verification:
