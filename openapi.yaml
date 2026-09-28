@@ -76,6 +76,24 @@ paths:
                 $ref: '#/components/schemas/SignInErrorResponse'
           x-verification:
             basis: documentation
+  /auth/signout/{accesstoken}:
+    delete:
+      operationId: signOut
+      summary: Abmelden
+      description: Benutzerabmeldung
+      tags:
+        - Anmeldefunktionen
+      parameters:
+        - name: accesstoken
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Abmeldung erfolgreich
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
