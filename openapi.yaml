@@ -20,6 +20,7 @@ tags:
   - name: Instandhaltung
   - name: Finanzen - Buchungen
   - name: Arbeitsstunden
+  - name: Allgemeiner Verkauf
 paths:
   /auth/accesstoken:
     get:
@@ -1059,6 +1060,36 @@ paths:
                 $ref: '#/components/schemas/WorkHourCategoryListResponse'
           x-verification:
             basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+  /articles/list:
+    post:
+      operationId: listArticles
+      summary: Artikelliste auslesen
+      description: Auslesen aller Artikel
+      tags:
+        - Allgemeiner Verkauf
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListArticlesRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleListResponse'
+          x-verification:
+            basis: documentation
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -2509,3 +2540,77 @@ components:
         name:
           type: string
           description: Bezeichnung
+    ListArticlesRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    ArticleListResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/Article'
+    Article:
+      type: object
+      required:
+        - articleid
+        - designation
+        - unittype
+        - costtype
+        - spid
+        - account
+        - prices
+      properties:
+        articleid:
+          type: string
+          description: Artikelnr
+        designation:
+          type: string
+          description: Artikelbezeichnung
+        description:
+          type: string
+          description: Artikelbeschreibung
+        unittype:
+          type: string
+          description: Artikeleinheit
+        costtype:
+          type: string
+          description: Gebührenbereich
+        spid:
+          type: string
+          description: Sphäre
+        account:
+          type: string
+          description: Sachkonto
+        stockarticle:
+          type: integer
+          description: Bestandsartikel=1
+        stock:
+          type: number
+          description: Aktueller Bestand
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticlePrice'
+    ArticlePrice:
+      type: object
+      required:
+        - validfrom
+        - validto
+        - salestax
+        - unitprice
+      properties:
+        validfrom:
+          type: string
+          description: Gültig ab
+        validto:
+          type: string
+          description: Gültig bis
+        salestax:
+          type: string
+          description: Mehrwertsteuer
+        unitprice:
+          type: string
+          description: Bruttopreis
