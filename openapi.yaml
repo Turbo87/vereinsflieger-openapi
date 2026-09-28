@@ -1,0 +1,54 @@
+openapi: 3.1.2
+info:
+  title: Vereinsflieger REST API
+  version: 0.20260911.0
+servers:
+  - url: https://www.vereinsflieger.de/interface/rest
+    description: Vereinsflieger
+  - url: https://www.flightcenterplus.de/interface/rest
+    description: Flightcenter
+externalDocs:
+  description: Offizielle REST-API-Spezifikation (Anmeldung erforderlich)
+  url: https://vereinsflieger.de/member/help/download?file=VereinsfliegerRestInterface.pdf
+x-source-document-date: '2026-09-11'
+tags:
+  - name: Anmeldefunktionen
+paths:
+  /auth/accesstoken:
+    get:
+      operationId: getAccessToken
+      summary: Sitzungsschlüssel anfordern
+      description: |-
+        Liefert das Accesstoken für alle weiteren Aufrufe
+
+        Kunden von Vereinsflieger nutzen als Basisadresse https://www.vereinsflieger.de
+        Flightcenter-Kunden verwenden https://www.flightcenterplus.de
+      tags:
+        - Anmeldefunktionen
+      responses:
+        '200':
+          description: Accesstoken für alle weiteren Aufrufe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenResponse'
+              example:
+                httpstatuscode: 200
+                accesstoken: example-access-token
+          x-verification:
+            basis: documentation
+            observedAt: '2026-09-28'
+components:
+  schemas:
+    AccessTokenResponse:
+      type: object
+      required:
+        - httpstatuscode
+        - accesstoken
+      properties:
+        httpstatuscode:
+          type: integer
+          description: HTTP-Statuscode in der Antwort.
+        accesstoken:
+          type: string
+          description: Accesstoken für alle weiteren Aufrufe.

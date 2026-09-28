@@ -1,0 +1,11 @@
+{
+  "name": "vereinsflieger-openapi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "redocly lint openapi.yaml --extends=spec"
+  },
+  "devDependencies": {
+    "@redocly/cli": "2.54.3"
+  }
+}
