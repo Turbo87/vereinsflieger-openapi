@@ -315,6 +315,38 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/list/today:
+    post:
+      operationId: listTodayFlights
+      summary: Alle Flüge von heute auslesen
+      description: Auslesen aller Flüge die heute gestartet/gelandet sind.
+      tags:
+        - Flugdatenerfassung
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListTodayFlightsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightListResponse'
+          x-verification:
+            basis: documentation
+            observedAt: '2026-09-28'
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+            observedAt: '2026-09-28'
 components:
   schemas:
     AccessTokenResponse:
@@ -928,3 +960,155 @@ components:
         value:
           type: number
           description: Brutto Abrechnungsbetrag
+    ListTodayFlightsRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    FlightListResponse:
+      type: object
+      properties:
+        httpstatuscode:
+          type: integer
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/FlightListEntry'
+    FlightListEntry:
+      type: object
+      properties:
+        aidarrival:
+          type: string
+        aiddeparture:
+          type: string
+        apid:
+          type: string
+        arrivallocation:
+          type: string
+        arrivaltime:
+          type: string
+        attendantmemberid:
+          type:
+            - string
+            - 'null'
+        attendantname:
+          type: string
+        attendantname2:
+          type: string
+        attendantname3:
+          type: string
+        blocktime:
+          type: string
+        callsign:
+          type: string
+        chargemode:
+          type: string
+        checkin:
+          type:
+            - string
+            - 'null'
+        checkout:
+          type:
+            - string
+            - 'null'
+        cid:
+          type: string
+        comment:
+          type: string
+        createtime:
+          type: string
+        dateofflight:
+          type: string
+        deleted:
+          type: string
+        departurelocation:
+          type: string
+        departuretime:
+          type: string
+        duplicate:
+          type: integer
+        finame:
+          type:
+            - string
+            - 'null'
+        flid:
+          type: string
+        flidtow:
+          type: string
+        flightmode:
+          type: string
+        flighttime:
+          type: string
+        ft_education:
+          type: string
+        ftid:
+          type: string
+        guestcost:
+          type:
+            - string
+            - 'null'
+        invoiced:
+          type: string
+        invoiceinfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlightInvoiceItem'
+        iscommunityplane:
+          type: string
+        km:
+          type: string
+        landingcount:
+          type: string
+        modifytime:
+          type: string
+        motorend:
+          type: string
+        motorstart:
+          type: string
+        offblock:
+          type: string
+        onblock:
+          type: string
+        pilotmemberid:
+          type: string
+        pilotname:
+          type: string
+        planetype:
+          type: string
+        planedesignation:
+          type: string
+        ptid:
+          type: string
+        runwayarrival:
+          type: string
+        runwaydeparture:
+          type: string
+        starttype:
+          type: string
+        towcallsign:
+          type: string
+        towheight:
+          type: string
+        towtime:
+          type: string
+        uidattendant:
+          type: string
+        uidattendant2:
+          type: string
+        uidattendant3:
+          type: string
+        uidcharge:
+          type: string
+        uidcreate:
+          type: string
+        uidfi:
+          type: string
+        uidmodify:
+          type: string
+        uidpilot:
+          type: string
+        uidwinch:
+          type: string
+        wid:
+          type: string
