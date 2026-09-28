@@ -1188,6 +1188,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /sale/list/today:
+    post:
+      operationId: listTodaySales
+      summary: Liste der Verkäufe auslesen (Heute)
+      description: Auflistung aller Verkäufe von heute (Leistungsdatum)
+      tags:
+        - Allgemeiner Verkauf
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListTodaySalesRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2794,3 +2824,10 @@ components:
           type: string
           format: date
           description: Leistungsdatum
+    ListTodaySalesRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
