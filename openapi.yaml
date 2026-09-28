@@ -1114,6 +1114,7 @@ paths:
                 $ref: '#/components/schemas/ArticleListResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1144,6 +1145,7 @@ paths:
                 $ref: '#/components/schemas/SaleListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1174,6 +1176,7 @@ paths:
                 $ref: '#/components/schemas/SaleListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1204,6 +1207,7 @@ paths:
                 $ref: '#/components/schemas/SaleListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1234,6 +1238,7 @@ paths:
                 $ref: '#/components/schemas/SaleListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1325,6 +1330,7 @@ paths:
                 $ref: '#/components/schemas/VoucherListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -2974,6 +2980,9 @@ components:
           type: string
     ArticleListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/Article'
@@ -3010,7 +3019,9 @@ components:
           type: string
           description: Sachkonto
         stockarticle:
-          type: integer
+          type:
+            - integer
+            - string
           description: Bestandsartikel=1
         stock:
           type: number
@@ -3058,6 +3069,9 @@ components:
           description: Datum im Format YYYY-mm-dd
     SaleListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/Sale'
@@ -3075,19 +3089,21 @@ components:
           type: number
           description: Menge
         memberid:
-          type: integer
+          type:
+            - string
+            - 'null'
           description: Mitgliedsnummer des Käufers
         callsign:
           type: string
           description: Callsign bzw. Verwendung
         salestax:
-          type: number
+          type: string
           description: Steuer
         totalprice:
-          type: number
+          type: string
           description: Bruttopreis
         counter:
-          type: number
+          type: string
           description: Zählerstand
         comment:
           type: string
@@ -3096,11 +3112,25 @@ components:
           type: string
           description: Gebührenbereich
         caid2:
-          type: integer
+          type: string
           description: id des Habenkontos (muss ein Aufwand- oder Ertragskonto sein)
         spid:
-          type: integer
+          type: string
           description: Sphäre
+        createtime:
+          type: string
+        modifytime:
+          type: string
+        netvalue:
+          type: string
+        supid:
+          type: string
+        uid:
+          type:
+            - string
+            - 'null'
+        username:
+          type: string
         paymentmode:
           type: integer
           description: Zahlungsart (nur bei Verwendung des Kassenbuchs).
@@ -3199,6 +3229,9 @@ components:
           type: string
     VoucherListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/Voucher'
@@ -3206,7 +3239,7 @@ components:
       type: object
       properties:
         vid:
-          type: integer
+          type: string
           description: Eindeutige Id
         voucherid:
           type: string
@@ -3261,6 +3294,8 @@ components:
         statustext:
           type: string
           description: Status
+        status:
+          type: string
     AddVoucherRequest:
       type: object
       required:
