@@ -18,6 +18,7 @@ tags:
   - name: Kalender und Termine
   - name: Reservierungen
   - name: Instandhaltung
+  - name: Finanzen - Buchungen
 paths:
   /auth/accesstoken:
     get:
@@ -779,6 +780,43 @@ paths:
             basis: documentation
         '400':
           description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+  /account/get/{adid}:
+    post:
+      operationId: getBooking
+      summary: Einzelne Buchung auslesen
+      description: Buchung auslesen
+      tags:
+        - Finanzen - Buchungen
+      parameters:
+        - name: adid
+          in: path
+          required: true
+          description: Eindeutige Buchungsnummer
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GetBookingRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          x-verification:
+            basis: documentation
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
           x-verification:
             basis: documentation
 components:
@@ -1894,3 +1932,64 @@ components:
         towcount:
           type: integer
           description: Aktuelle Anzahl der Schleppstarts
+    GetBookingRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    Booking:
+      type: object
+      required:
+        - adid
+      properties:
+        adid:
+          type: integer
+          description: Buchungsnummer
+        createtime:
+          type: string
+          description: Erstellungsdatum
+        modifytime:
+          type: string
+          description: Letztes Änderungsdatum
+        bookingdate:
+          type: string
+          format: date
+          description: Buchungsdatum
+        bookingtext:
+          type: string
+          description: Buchungstext
+        value:
+          type: number
+          description: Wert
+        netvalue:
+          type: number
+          description: Nettowert
+        salestax:
+          type: number
+          description: Mehrwertsteuer in %
+        debitaccount:
+          type: string
+          description: Sollkonto
+        creditaccount:
+          type: string
+          description: Habenkonto
+        taxaccount:
+          type: string
+          description: Steuerkonto
+        accountreference:
+          type: string
+          description: Belegart
+        accountreferenceid:
+          type: integer
+          description: Belegnr
+        costtype:
+          type: string
+          description: Gebührenbereich
+        spid:
+          type: integer
+          description: Sphäre
+        bookingerror:
+          type: integer
+          description: Wert =1 -> Buchung ist fehlerhaft
