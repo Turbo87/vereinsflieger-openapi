@@ -650,6 +650,43 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /calendar/edit/{apoid}:
+    put:
+      operationId: editAppointment
+      summary: Termin bearbeiten
+      description: Bearbeiten eines vorhandenen Termins.
+      tags:
+        - Kalender und Termine
+      parameters:
+        - name: apoid
+          in: path
+          required: true
+          description: Eindeutige Buchungsnummer
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EditAppointmentRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1642,6 +1679,21 @@ components:
             accesstoken:
               type: string
             title:
+              type: string
+            datefrom:
+              type: string
+            dateto:
+              type: string
+    EditAppointmentRequest:
+      allOf:
+        - $ref: '#/components/schemas/AppointmentWriteFields'
+        - type: object
+          required:
+            - accesstoken
+            - datefrom
+            - dateto
+          properties:
+            accesstoken:
               type: string
             datefrom:
               type: string
