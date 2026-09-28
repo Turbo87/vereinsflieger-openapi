@@ -22,6 +22,7 @@ tags:
   - name: Arbeitsstunden
   - name: Allgemeiner Verkauf
   - name: Datensicherung
+  - name: Gutscheine
 paths:
   /auth/accesstoken:
     get:
@@ -1272,6 +1273,36 @@ paths:
                 format: binary
           x-verification:
             basis: documentation
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+  /voucher/list:
+    post:
+      operationId: listVouchers
+      summary: Gutscheinliste auslesen
+      description: Auslesen aller Gurscheine
+      tags:
+        - Gutscheine
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListVouchersRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoucherListResponse'
+          x-verification:
+            basis: inference
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -2947,3 +2978,74 @@ components:
             Zahlungsart (nur bei Verwendung des Kassenbuchs). Gültige Werte
             hier sind: 0 – Nicht im Kassenbuch auflisten, 1=Barkasse,
             2=EC-Zahlung, 4 – 8 =Frei belegbare Zahlungsarten.
+    ListVouchersRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    VoucherListResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/Voucher'
+    Voucher:
+      type: object
+      properties:
+        vid:
+          type: integer
+          description: Eindeutige Id
+        voucherid:
+          type: string
+          description: Gutscheinnummer
+        title:
+          type: string
+          description: Titel des Gutscheins
+        createtime:
+          type: string
+          description: Estellungsdatum
+        value:
+          type: number
+          description: Betrag
+        comment:
+          type: string
+          description: Kommentar
+        voucherdate:
+          type: string
+          format: date
+          description: Ausstellungsdatum
+        gender:
+          type: string
+          description: m=Männlich, w=Weiblich
+        firstname:
+          type: string
+          description: Vorname
+        lastname:
+          type: string
+          description: Nachname
+        street:
+          type: string
+          description: Straße
+        zipcode:
+          type: string
+          description: Plz
+        town:
+          type: string
+          description: Stadt
+        email:
+          type: string
+          description: Mailadresse
+        phonenumber:
+          type: string
+          description: Telefonnummer
+        expiredate:
+          type: string
+          format: date
+          description: Ablaufdatum
+        passenger:
+          type: string
+          description: Gast/Passagier
+        statustext:
+          type: string
+          description: Status
