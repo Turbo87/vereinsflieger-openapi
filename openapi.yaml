@@ -359,6 +359,10 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
             observedAt: '2026-09-28'
@@ -391,8 +395,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /flight/list/plane:
     post:
       operationId: listPlaneFlights
@@ -515,8 +524,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /flight/list/daterange:
     post:
       operationId: listFlightsByDateRange
@@ -546,8 +560,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /calendar/list/public:
     post:
       operationId: listPublicCalendar
@@ -642,6 +661,15 @@ paths:
           description: Ungültige Anfrage
           x-verification:
             basis: documentation
+        '401':
+          description: Nicht autorisiert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+          x-verification:
+            basis: inference
+            observedAt: '2026-09-28'
   /calendar/add:
     post:
       operationId: addAppointment
@@ -769,6 +797,15 @@ paths:
           description: Ungültige Anfrage
           x-verification:
             basis: documentation
+        '401':
+          description: Nicht autorisiert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+          x-verification:
+            basis: inference
+            observedAt: '2026-09-28'
   /maintenance/airplane/{callsign}:
     post:
       operationId: getAirplaneMaintenance
@@ -802,6 +839,15 @@ paths:
           description: Ungültige Anfrage
           x-verification:
             basis: documentation
+        '401':
+          description: Nicht autorisiert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+          x-verification:
+            basis: inference
+            observedAt: '2026-09-28'
   /account/get/{adid}:
     post:
       operationId: getBooking
@@ -936,8 +982,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /account/list/year:
     post:
       operationId: listYearBookings
@@ -967,8 +1018,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /account/list/daterange:
     post:
       operationId: listBookingsByDateRange
@@ -998,8 +1054,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /workhours/list/daterange:
     post:
       operationId: listWorkHoursByDateRange
@@ -1029,8 +1090,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /workhours/add:
     post:
       operationId: addWorkHour
@@ -1090,8 +1156,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /articles/list:
     post:
       operationId: listArticles
@@ -1337,8 +1408,13 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
   /voucher/add:
     post:
       operationId: addVoucher
@@ -1458,6 +1534,16 @@ components:
         httpstatuscode:
           type: integer
           example: 200
+    ApiErrorResponse:
+      type: object
+      required:
+        - httpstatuscode
+        - error
+      properties:
+        httpstatuscode:
+          type: integer
+        error:
+          type: string
     GetUserRequest:
       type: object
       required:
