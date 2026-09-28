@@ -75,9 +75,14 @@ paths:
               $ref: '#/components/schemas/SignInRequest'
       responses:
         '200':
-          description: Anmeldung erfolgreich. Keine Antwortdaten.
+          description: Anmeldung erfolgreich.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInSuccessResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
         '403':
           description: Fehlerhafte Anmeldung.
           content:
@@ -126,6 +131,7 @@ paths:
                 $ref: '#/components/schemas/UserInformationResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
         '401':
           description: Nicht Authentifiziert
           x-verification:
@@ -315,6 +321,7 @@ paths:
                 $ref: '#/components/schemas/FlightResponse'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -377,6 +384,7 @@ paths:
                 $ref: '#/components/schemas/FlightListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -407,6 +415,7 @@ paths:
                 $ref: '#/components/schemas/FlightListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -437,6 +446,7 @@ paths:
                 $ref: '#/components/schemas/FlightListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -467,6 +477,7 @@ paths:
                 $ref: '#/components/schemas/FlightListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -497,6 +508,7 @@ paths:
                 $ref: '#/components/schemas/FlightListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -527,6 +539,7 @@ paths:
                 $ref: '#/components/schemas/FlightListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1422,6 +1435,14 @@ components:
         need_2fa:
           type: integer
           description: 1, wenn der Benutzer die Zwei-Faktor-Authentifizierung aktiviert hat.
+    SignInSuccessResponse:
+      type: object
+      required:
+        - httpstatuscode
+      properties:
+        httpstatuscode:
+          type: integer
+          example: 200
     GetUserRequest:
       type: object
       required:
@@ -1442,8 +1463,12 @@ components:
         - email
       properties:
         uid:
-          type: integer
+          type: string
           description: Eindeutige Id im Vereinsflieger
+        cid:
+          type: string
+        httpstatuscode:
+          type: integer
         firstname:
           type: string
           description: Vorname
@@ -1844,8 +1869,10 @@ components:
       required:
         - flid
       properties:
-        flid:
+        httpstatuscode:
           type: integer
+        flid:
+          type: string
           description: Eindeutige Flugnummer
         createtime:
           type: string
@@ -1854,49 +1881,53 @@ components:
           type: string
           description: Datum der letzten Änderung
         apid:
-          type: integer
+          type: string
           description: Eindeutige LFZ-Nummer
         callsign:
           type: string
           description: LFZ-Kennzeichen
         uidpilot:
-          type: integer
+          type: string
           description: Eindeutige Benutzernummer des Piloten
         pilotname:
           type: string
           description: Pilot
         pilotmemberid:
-          type: integer
+          type: string
           description: Mitgliedsnummer des Piloten im Verein
         uidattendant:
-          type: integer
+          type: string
           description: Eindeutige Benutzernummer des Begleiters / FI
         attendantname:
           type: string
           description: Begleiter / FI
         attendantmemberid:
-          type: integer
+          type:
+            - string
+            - 'null'
           description: Mitgliedsnummer des Begleiters im Verein
         uidattendant2:
-          type: integer
+          type: string
           description: Eindeutige Benutzernummer des 2. Begleiters
         attendantname2:
           type: string
           description: Begleiter
         uidattendant3:
-          type: integer
+          type: string
           description: Eindeutige Benutzernummer des 3. Begleiters
         attendantname3:
           type: string
           description: Begleiter
         uidfi:
-          type: integer
+          type: string
           description: Eindeutige Benutzernummer (Flugauftrag von)
         finame:
-          type: string
+          type:
+            - string
+            - 'null'
           description: Flugauftrag von
         uidcharge:
-          type: integer
+          type: string
           description: Eindeutige Benutzernummer (Anderes Mitglied zahlt)
         dateofflight:
           type: string
@@ -1914,22 +1945,22 @@ components:
           type: string
           description: Landeort
         flighttime:
-          type: integer
+          type: string
           description: Flugzeit
         landingcount:
-          type: integer
+          type: string
           description: Anzahl der Landungen
         starttype:
-          type: integer
+          type: string
           description: Startart (1=Eigenstart,3=F-Schlepp,5=Winde,7=Gummiseil,9=Fahrzeug)
         comment:
           type: string
           description: Kommentar
         flightmode:
-          type: integer
+          type: string
           description: Flugmodus (1=Lokal, 2=Abflug, 3=Landung, 4=Fremd)
         ftid:
-          type: integer
+          type: string
           description: Id der Flugart (Siehe Stammdaten Flugarten)
         offblock:
           type: string
@@ -1938,32 +1969,84 @@ components:
           type: string
           description: OnBlock-Zeit
         motorstart:
-          type: number
+          type: string
           description: Motorzählerstand bei Start. Angabe in Industriestunden.
         motorend:
-          type: number
+          type: string
           description: Motorzählerstand bei Landung. Angabe in Industriestunden.
         blocktime:
-          type: integer
+          type: string
           description: Blockzeit
         flidtow:
-          type: integer
+          type: string
           description: Eindeutige Flugnummer des zugehörigen Schleppfluges
         chargemode:
-          type: integer
+          type: string
           description: >-
             Abrechnungsmodus(1=Keine, 2=Pilot, 3=Begleiter, 4=Gastflug,
             5=Pilot+Begleiter, 6=Gastflug (Pilot zahlt), 7=Anderes Mitglied,
             8=Über SF, 9=Landegebühr)
         wid:
-          type: integer
+          type: string
           description: Id der Winde
         uidwinch:
-          type: integer
+          type: string
           description: Windenfahrer
         planetype:
           type: string
           description: Luftfahrzeugart (Segelflugzeug, Reisemotorsegler, Ultraleicht …)
+        aidarrival:
+          type: string
+        aiddeparture:
+          type: string
+        checkin:
+          type:
+            - string
+            - 'null'
+        checkout:
+          type:
+            - string
+            - 'null'
+        cid:
+          type: string
+        deleted:
+          type: string
+        ft_education:
+          type: string
+        guestcost:
+          type:
+            - string
+            - 'null'
+        invoiced:
+          type: string
+        iscommunityplane:
+          type:
+            - string
+            - 'null'
+        km:
+          type: string
+        motortime:
+          type: integer
+        planedesignation:
+          type:
+            - string
+            - 'null'
+        ptid:
+          type: string
+        runwayarrival:
+          type: string
+        runwaydeparture:
+          type: string
+        towcallsign:
+          type: string
+        towheight:
+          type: string
+        towtime:
+          type: string
+        uidcreate:
+          type: string
+        uidmodify:
+          type: string
         invoiceinfo:
           type: array
           description: Fluggebühren (nach der Abrechnung verfügbar)
@@ -1973,16 +2056,16 @@ components:
       type: object
       properties:
         uid:
-          type: integer
+          type: string
           description: Benutzernummer
         adid:
-          type: integer
+          type: string
           description: ID der Buchungsnummer
         name:
           type: string
           description: Name
         value:
-          type: number
+          type: string
           description: Brutto Abrechnungsbetrag
     ListTodayFlightsRequest:
       type: object
@@ -2168,7 +2251,9 @@ components:
           items:
             $ref: '#/components/schemas/FlightInvoiceItem'
         iscommunityplane:
-          type: string
+          type:
+            - string
+            - 'null'
         km:
           type: string
         landingcount:
@@ -2184,13 +2269,17 @@ components:
         onblock:
           type: string
         pilotmemberid:
-          type: string
+          type:
+            - string
+            - 'null'
         pilotname:
           type: string
         planetype:
           type: string
         planedesignation:
-          type: string
+          type:
+            - string
+            - 'null'
         ptid:
           type: string
         runwayarrival:
