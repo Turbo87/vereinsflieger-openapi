@@ -554,6 +554,32 @@ paths:
           description: Ungültige Anfrage
           x-verification:
             basis: documentation
+  /calendar/list/mycalendar:
+    get:
+      operationId: listMyCalendar
+      summary: Meine Termine (ICS) auslesen
+      description: Auslesen des eigenen Kalenders. Es wird die Einstellung des ics-Kalenders verwendet.
+      tags:
+        - Kalender und Termine
+      parameters:
+        - name: accesstoken
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyCalendarResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1442,6 +1468,35 @@ components:
         comment:
           type: string
           description: Kommentar
+        daterange:
+          type: string
+          description: Zeitraum im Klartext
+        duration:
+          type: string
+          description: Dauer im Klartext
+    MyCalendarResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/MyCalendarEvent'
+    MyCalendarEvent:
+      type: object
+      properties:
+        datefrom:
+          type: string
+          description: Beginn
+        dateto:
+          type: string
+          description: Ende
+        title:
+          type: string
+          description: Titel
+        location:
+          type: string
+          description: Ort
+        description:
+          type: string
+          description: Beschreibung
         daterange:
           type: string
           description: Zeitraum im Klartext
