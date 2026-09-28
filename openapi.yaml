@@ -156,6 +156,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/add:
+    post:
+      operationId: addFlight
+      summary: Flug anlegen
+      description: Anlage eines neuen Fluges
+      tags:
+        - Flugdatenerfassung
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddFlightRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht authentifiziert
+          x-verification:
+            basis: documentation
   /flight/get/{flid}:
     post:
       operationId: getFlight
@@ -499,6 +529,130 @@ components:
           type: string
         name:
           type: string
+    FlightWriteFields:
+      type: object
+      properties:
+        callsign:
+          type: string
+          description: LFZ-Kennzeichen
+        pilotname:
+          type: string
+          description: Name des Piloten
+        uidpilot:
+          type: integer
+          description: uid des Piloten
+        attendantname:
+          type: string
+          description: Name des Begleiters / FI
+        uidattendant:
+          type: integer
+          description: uid des Begleiters / FI
+        attendantname2:
+          type: string
+          description: Name des 2. Begleiters
+        uidattendant2:
+          type: integer
+          description: uid des 2. Begleiters
+        attendantname3:
+          type: string
+          description: Name des 3. Begleiters
+        uidattendant3:
+          type: integer
+          description: uid des 3.Begleiters
+        starttype:
+          type: string
+          description: Startart (E, W oder F)
+        departuretime:
+          type: string
+          description: Startzeit in UTC. Format(YYYY-mm-dd HH:ii)
+        departurelocation:
+          type: string
+          description: Name oder ICAO oder Koordinaten (LAT,LON)
+        arrivaltime:
+          type: string
+          description: Landezeit in UTC. Format(YYYY-mm-dd HH:ii)
+        arrivallocation:
+          type: string
+          description: Landeort
+        landingcount:
+          type: integer
+          description: Anzahl der Landungen (default= 1)
+          default: 1
+        ftid:
+          type: integer
+          description: Flugart im Standard=10 oder 8-Schulflug
+        km:
+          type: integer
+          description: Strecke in Km
+        chargemode:
+          type: integer
+          description: >-
+            Abrechnungsmodus(1=keine,2=Pilot,3=Begleiter,4=Gast,
+            5=Pilot+Begleiter, 7=Anderes Mitglied)
+        uidcharge:
+          type: integer
+          description: id des zahlenden Mitglieds
+        comment:
+          type: string
+          description: Bemerkung
+        towcallsign:
+          type: string
+          description: Callsign des Schleppflugzeugs
+        towpilotname:
+          type: string
+          description: Pilot des Schleppflugzeugs
+        towuidpilot:
+          type: integer
+          description: uid des Schlepppiloten
+        towtime:
+          type: integer
+          description: Schleppzeit in Minuten
+        towheight:
+          type: integer
+          description: Schlepphöhe in Meter
+        offblock:
+          type: string
+          description: Offblock in UTC im Format(HH:ii)
+        onblock:
+          type: string
+          description: Onblock in UTC im Format(HH:ii)
+        motorstart:
+          description: Motorzählerstand bei Start. Angabe entweder in HH:ii oder als Industriestunde mit max 5 Nachkommastellen.
+          oneOf:
+            - type: string
+            - type: number
+        motorend:
+          description: Motorzählerstand bei Landung. Angabe entweder in HH:ii oder als Industriestunde mit max 5 Nachkommastellen.
+          oneOf:
+            - type: string
+            - type: number
+        wid:
+          type: integer
+          description: Id der Winde
+        uidwinch:
+          type: integer
+          description: Windenfahrer
+        uidfi:
+          type: integer
+          description: Fluglehrer bei Flugauftrag
+    AddFlightRequest:
+      allOf:
+        - $ref: '#/components/schemas/FlightWriteFields'
+        - type: object
+          required:
+            - accesstoken
+            - callsign
+          properties:
+            accesstoken:
+              type: string
+            callsign:
+              type: string
+            flighttime:
+              type: integer
+              description: Flugzeit in Minuten (optional)
+            blocktime:
+              type: integer
+              description: Blockzeit in Minuten (optional)
     GetFlightRequest:
       type: object
       required:
