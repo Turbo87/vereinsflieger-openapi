@@ -1311,6 +1311,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /voucher/add:
+    post:
+      operationId: addVoucher
+      summary: Gutschein anlegen
+      description: Anlage eines neuen Gutscheins
+      tags:
+        - Gutscheine
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddVoucherRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voucher'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -3049,3 +3079,78 @@ components:
         statustext:
           type: string
           description: Status
+    AddVoucherRequest:
+      type: object
+      required:
+        - accesstoken
+        - voucherid
+        - title
+        - value
+        - insertnewuser
+      properties:
+        accesstoken:
+          type: string
+        voucherid:
+          type: string
+          description: Gutscheinnummer
+        title:
+          type: string
+          description: Titel des Gutscheins
+        value:
+          type: number
+          description: Betrag
+        insertnewuser:
+          type: integer
+          description: 1 = Als Person in die Mitgliederverwaltung aufnehmen
+        lastname:
+          type: string
+          description: Nachname. Dieses Feld ist ein Pflichtfeld, wenn die Person in die Mitgliederverwaltung aufgenommen werden soll.
+        comment:
+          type: string
+          description: Kommentar
+        voucherdate:
+          type: string
+          format: date
+          description: Ausstellungsdatum
+        gender:
+          type: string
+          enum: [m, w, d]
+          description: m=Männlich, w=Weiblich, d=divers
+        firstname:
+          type: string
+          description: Vorname
+        street:
+          type: string
+          description: Straße
+        zipcode:
+          type: string
+          description: Plz
+        town:
+          type: string
+          description: Stadt
+        email:
+          type: string
+          description: Mailadresse
+        phonenumber:
+          type: string
+          description: Telefonnummer
+        expiredate:
+          type: string
+          format: date
+          description: Ablaufdatum
+        passenger:
+          type: string
+          description: Gast/Passagier
+        status:
+          type: integer
+          enum: [1, 2, 3, 4, 5, 6]
+          description: >-
+            1 = "Erstellt", 2 = "Aktiviert", 6 = "Teilw. eingelöst",
+            3 = "Eingelöst", 4 = "Abgelaufen", 5 = "Storniert"
+      if:
+        properties:
+          insertnewuser:
+            const: 1
+      then:
+        required:
+          - lastname
