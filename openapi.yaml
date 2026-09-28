@@ -15,6 +15,7 @@ tags:
   - name: Anmeldefunktionen
   - name: Mitglieder
   - name: Flugdatenerfassung
+  - name: Kalender und Termine
 paths:
   /auth/accesstoken:
     get:
@@ -525,6 +526,32 @@ paths:
             basis: documentation
         '401':
           description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+  /calendar/list/public:
+    post:
+      operationId: listPublicCalendar
+      summary: Öffentlichen Kalender auslesen
+      description: Auslesen des öffentlichen Kalenders
+      tags:
+        - Kalender und Termine
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListPublicCalendarRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCalendarResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
           x-verification:
             basis: documentation
 components:
@@ -1381,3 +1408,43 @@ components:
           type: string
         wid:
           type: string
+    ListPublicCalendarRequest:
+      type: object
+      required:
+        - hpaccesscode
+      properties:
+        hpaccesscode:
+          type: string
+          description: Homepageaccesscode. Dieser ist zu finden in der Administration/Homepageerweiterungen/Kalender
+    PublicCalendarResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/PublicCalendarEvent'
+    PublicCalendarEvent:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Titel
+        datefrom:
+          type: string
+          description: ab
+        dateto:
+          type: string
+          description: bis
+        wholeday:
+          type: integer
+          description: gänztagig = 1
+        location:
+          type: string
+          description: Ort
+        comment:
+          type: string
+          description: Kommentar
+        daterange:
+          type: string
+          description: Zeitraum im Klartext
+        duration:
+          type: string
+          description: Dauer im Klartext
