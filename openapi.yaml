@@ -497,6 +497,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/list/daterange:
+    post:
+      operationId: listFlightsByDateRange
+      summary: Alle Flüge für einen Zeitraum auslesen
+      description: Auslesen aller Flüge die an einem bestimmten Zeitraum gestartet/gelandet sind.
+      tags:
+        - Flugdatenerfassung
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListFlightsByDateRangeRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1189,6 +1219,23 @@ components:
           minimum: 1
           maximum: 28
           description: Anzahl der Tage (1 – 28)
+    ListFlightsByDateRangeRequest:
+      type: object
+      required:
+        - accesstoken
+        - datefrom
+        - dateto
+      properties:
+        accesstoken:
+          type: string
+        datefrom:
+          type: string
+          format: date
+          description: Datum im Format YYYY-mm-dd
+        dateto:
+          type: string
+          format: date
+          description: Datum im Format YYYY-mm-dd
     FlightListResponse:
       type: object
       properties:
