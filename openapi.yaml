@@ -596,6 +596,7 @@ paths:
                 $ref: '#/components/schemas/MyCalendarResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -636,6 +637,7 @@ paths:
                 $ref: '#/components/schemas/AppointmentListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -762,6 +764,7 @@ paths:
                 $ref: '#/components/schemas/ReservationListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1015,6 +1018,7 @@ paths:
                 $ref: '#/components/schemas/WorkHourListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1075,6 +1079,7 @@ paths:
                 $ref: '#/components/schemas/WorkHourCategoryListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -2356,12 +2361,23 @@ components:
           description: Dauer im Klartext
     MyCalendarResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/MyCalendarEvent'
     MyCalendarEvent:
       type: object
       properties:
+        group:
+          type: integer
+        id:
+          type: string
+        mode:
+          type: integer
+        url:
+          type: string
         datefrom:
           type: string
           description: Beginn
@@ -2385,6 +2401,9 @@ components:
           description: Dauer im Klartext
     AppointmentListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/Appointment'
@@ -2404,7 +2423,7 @@ components:
           type: string
           description: Ende
         exthomepage:
-          type: integer
+          type: string
           description: 1 = Anzeige auf ext Homepage, sonst 0
         location:
           type: string
@@ -2488,6 +2507,9 @@ components:
           type: string
     ReservationListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/Reservation'
@@ -2495,7 +2517,7 @@ components:
       type: object
       properties:
         prid:
-          type: integer
+          type: string
           description: ReservierungsId
         datefrom:
           type: string
@@ -2507,16 +2529,16 @@ components:
           type: string
           description: Kommentar
         freeseats:
-          type: integer
+          type: string
           description: Freie Sitze
         uid:
-          type: integer
+          type: string
           description: Eindeutige id des Piloten
         user:
           type: string
           description: Pilot
         uidfi:
-          type: integer
+          type: string
           description: Eindeutige id des Fluglehrers
         fi:
           type: string
@@ -2537,13 +2559,13 @@ components:
           type: string
           description: Erstellungszeitpunkt
         uidcreate:
-          type: integer
+          type: string
           description: uid des Erstellers
         modifytime:
           type: string
           description: Zeitpunkt der letzten Änderung
         uidmodify:
-          type: integer
+          type: string
           description: uid der der Person, die die letzte Änderung gemacht hat
         defaultairport:
           type: string
@@ -2788,6 +2810,9 @@ components:
           description: Datum im Format YYYY-mm-dd
     WorkHourListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/WorkHour'
@@ -2804,7 +2829,7 @@ components:
           type: string
           description: Letzte Änderung
         uid:
-          type: integer
+          type: string
           description: ID des Person
         username:
           type: string
@@ -2826,17 +2851,19 @@ components:
           type: string
           description: Zeitraum bis
         status:
-          type: integer
+          type: string
           description: Stautus
         statusinfo:
           type: string
           description: Statusbezeichnung
         category:
-          type: integer
+          type: string
           description: Kategorie
         categoryinfo:
           type: string
           description: Kategoriebezeichnung
+        uidstatus:
+          type: string
         comment:
           type: string
           description: Kommentar
@@ -2890,6 +2917,9 @@ components:
           type: string
     WorkHourCategoryListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/WorkHourCategory'
@@ -2897,11 +2927,19 @@ components:
       type: object
       properties:
         category:
-          type: integer
+          type: string
           description: Eindeutige Id der Kategorie
         name:
           type: string
           description: Bezeichnung
+        default:
+          type: string
+        enabled:
+          type: string
+        valueabove:
+          type: string
+        valuebelow:
+          type: string
     ListArticlesRequest:
       type: object
       required:
