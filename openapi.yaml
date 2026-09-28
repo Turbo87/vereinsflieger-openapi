@@ -819,6 +819,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /account/add:
+    post:
+      operationId: addBooking
+      summary: Buchung anlegen
+      description: Anlage einer neuen Buchung. Voraussetzung ist der Buchhaltungsmodus Version2
+      tags:
+        - Finanzen - Buchungen
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddBookingRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1993,3 +2023,56 @@ components:
         bookingerror:
           type: integer
           description: Wert =1 -> Buchung ist fehlerhaft
+    AddBookingRequest:
+      type: object
+      required:
+        - accesstoken
+        - bookingdate
+        - value
+        - salestax
+        - debitaccount
+        - creditaccount
+        - taxaccount
+        - accountreference
+        - accountreferenceid
+        - bookingtext
+        - costtype
+        - spid
+      properties:
+        accesstoken:
+          type: string
+        bookingdate:
+          type: string
+          format: date
+          description: Buchungsdatum im Format (YYYY-mm-dd)
+        value:
+          type: number
+          exclusiveMinimum: 0
+          description: Bruttobetrag(muss > 0,00 sein)
+        salestax:
+          type: number
+          description: Mehrwertsteuer in % (gültiger MwSt- Eintrag aus den Stammdaten)
+        debitaccount:
+          type: string
+          description: Sachkontennummer Sollkonto
+        creditaccount:
+          type: string
+          description: Sachkontennummer Habenkonto
+        taxaccount:
+          type: string
+          description: Sachkontennummer Steuerkonto
+        accountreference:
+          type: string
+          description: Belegart (Kurzbezeichnung aus den Stammdaten)
+        accountreferenceid:
+          type: integer
+          description: Belegnr
+        bookingtext:
+          type: string
+          description: Buchungstext
+        costtype:
+          type: string
+          description: Gebührenbereich
+        spid:
+          type: integer
+          description: Sphäre
