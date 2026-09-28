@@ -14,6 +14,11 @@ With pnpm 12 and Node.js 24 or later:
 pnpm install --frozen-lockfile
 pnpm lint
 pnpm generate:types
+pnpm build:site
 ```
 
 Type generation checks that `openapi-typescript` can process the description. The generated types remain local; downstream projects can generate clients or types with their chosen tooling.
+
+## API viewer
+
+The static viewer loads the same OpenAPI file and disables browser requests. To preview it locally, run `python3 -m http.server 8000 --directory dist` after building, then open <http://localhost:8000/>.

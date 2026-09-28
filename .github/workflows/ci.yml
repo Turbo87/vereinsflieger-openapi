@@ -19,3 +19,4 @@ jobs:
           require-lockfile: true
       - run: pnpm lint
       - run: pnpm generate:types
+      - run: pnpm build:site

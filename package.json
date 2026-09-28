@@ -4,10 +4,12 @@
   "type": "module",
   "scripts": {
     "lint": "redocly lint openapi.yaml --extends=spec",
-    "generate:types": "openapi-typescript openapi.yaml -o .generated/openapi.d.ts"
+    "generate:types": "openapi-typescript openapi.yaml -o .generated/openapi.d.ts",
+    "build:site": "node scripts/build-site.mjs"
   },
   "devDependencies": {
     "@redocly/cli": "2.54.3",
-    "openapi-typescript": "7.13.0"
+    "openapi-typescript": "7.13.0",
+    "swagger-ui-dist": "5.33.0"
   }
 }
