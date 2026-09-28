@@ -1037,6 +1037,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /workhourcategories/list:
+    post:
+      operationId: listWorkHourCategories
+      summary: Arbeitsstundenkategorien auslesen
+      description: Auslesen aller Arbeitsstundenkategorien
+      tags:
+        - Arbeitsstunden
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListWorkHourCategoriesRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkHourCategoryListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2458,3 +2488,24 @@ components:
         comment:
           type: string
           description: Kommentar
+    ListWorkHourCategoriesRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    WorkHourCategoryListResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/WorkHourCategory'
+    WorkHourCategory:
+      type: object
+      properties:
+        category:
+          type: integer
+          description: Eindeutige Id der Kategorie
+        name:
+          type: string
+          description: Bezeichnung
