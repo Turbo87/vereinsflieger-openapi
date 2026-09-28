@@ -580,6 +580,46 @@ paths:
           description: Ungültige Anfrage
           x-verification:
             basis: documentation
+  /calendar/list:
+    get:
+      operationId: listAppointments
+      summary: Termine auslesen
+      description: Auslesen der Termine für einen Zeitraum
+      tags:
+        - Kalender und Termine
+      parameters:
+        - name: accesstoken
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: datefrom
+          in: query
+          required: true
+          description: Startdatum
+          schema:
+            type: string
+            format: date
+        - name: dateto
+          in: query
+          required: true
+          description: Endedatum
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1503,3 +1543,35 @@ components:
         duration:
           type: string
           description: Dauer im Klartext
+    AppointmentListResponse:
+      type: object
+      patternProperties:
+        '^[0-9]+$':
+          $ref: '#/components/schemas/Appointment'
+    Appointment:
+      type: object
+      properties:
+        apoid:
+          type: integer
+          description: Eindeutige ID
+        title:
+          type: string
+          description: Titel
+        datefrom:
+          type: string
+          description: Beginn
+        dateto:
+          type: string
+          description: Ende
+        exthomepage:
+          type: integer
+          description: 1 = Anzeige auf ext Homepage, sonst 0
+        location:
+          type: string
+          description: Ort
+        comment:
+          type: string
+          description: Beschreibung
+        appointmenturl:
+          type: string
+          description: URL
