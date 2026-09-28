@@ -17,6 +17,7 @@ tags:
   - name: Flugdatenerfassung
   - name: Kalender und Termine
   - name: Reservierungen
+  - name: Instandhaltung
 paths:
   /auth/accesstoken:
     get:
@@ -743,6 +744,39 @@ paths:
                 $ref: '#/components/schemas/ReservationListResponse'
           x-verification:
             basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+  /maintenance/airplane/{callsign}:
+    post:
+      operationId: getAirplaneMaintenance
+      summary: Aktuelle Zellenzeiten eines LFZs auslesen
+      description: Auslesen der Zellenzeit zu einem LFZ
+      tags:
+        - Instandhaltung
+      parameters:
+        - name: callsign
+          in: path
+          required: true
+          description: Callsign des LFZs
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GetAirplaneMaintenanceRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AirplaneMaintenanceResponse'
+          x-verification:
+            basis: documentation
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -1838,3 +1872,25 @@ components:
         estimatedflighttime:
           type: string
           description: Geplante Flugzeit
+    GetAirplaneMaintenanceRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    AirplaneMaintenanceResponse:
+      type: object
+      properties:
+        motortime:
+          type: number
+          description: Aktueller Motorzählerstand
+        flighttime:
+          type: number
+          description: Aktueller Flugzeitenstand
+        landingcount:
+          type: integer
+          description: Aktuelle Anzahl der Landungen
+        towcount:
+          type: integer
+          description: Aktuelle Anzahl der Schleppstarts
