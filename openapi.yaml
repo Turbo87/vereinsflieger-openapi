@@ -38,6 +38,44 @@ paths:
           x-verification:
             basis: documentation
             observedAt: '2026-09-28'
+  /auth/signin:
+    post:
+      operationId: signIn
+      summary: Anmelden
+      description: |-
+        Anmeldung eines Benutzers
+
+        Hinweis: Das Passwort muss vorher verschlüsselt werden:
+                 md5(password)
+        Hinweis: Die eindeutige cid wird nur benötigt, wenn der Benutzer in
+        mehreren Vereinen existiert.
+
+        Der für die Nutzung erforderliche appkey kann über die Stammdaten
+        (Einstellungen => REST Interface) des Vereins erstellt werden. Die
+        max. Anzahl an Requests (gemeint sind alle Aufrufe, die einem appkey
+        zugeordnet werden) ist auf 500 je Tag limitiert. Die kommerzielle
+        Nutzung der Schnittstelle ist grundsätzlich untersagt.
+      tags:
+        - Anmeldefunktionen
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Anmeldung erfolgreich. Keine Antwortdaten.
+          x-verification:
+            basis: documentation
+        '403':
+          description: Fehlerhafte Anmeldung.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInErrorResponse'
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -52,3 +90,40 @@ components:
         accesstoken:
           type: string
           description: Accesstoken für alle weiteren Aufrufe.
+    SignInRequest:
+      type: object
+      required:
+        - accesstoken
+        - username
+        - password
+        - appkey
+      properties:
+        accesstoken:
+          type: string
+          description: Zuvor angefordertes Accesstoken.
+        username:
+          type: string
+          description: Benutzername.
+        password:
+          type: string
+          description: MD5-Hash des Passworts.
+        appkey:
+          type: string
+          description: Eindeutiger Applikationsschlüssel.
+        cid:
+          type: integer
+          description: Eindeutige Nummer des Vereins. Nur erforderlich, wenn der Benutzer in mehreren Vereinen existiert.
+        auth_secret:
+          type: string
+          description: Wert für die Zwei-Faktor-Authentifizierung.
+    SignInErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Fehlerbeschreibung.
+        need_2fa:
+          type: integer
+          description: 1, wenn der Benutzer die Zwei-Faktor-Authentifizierung aktiviert hat.
