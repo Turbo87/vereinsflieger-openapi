@@ -831,6 +831,7 @@ paths:
                 $ref: '#/components/schemas/Booking'
           x-verification:
             basis: documentation
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -928,6 +929,7 @@ paths:
                 $ref: '#/components/schemas/BookingListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -958,6 +960,7 @@ paths:
                 $ref: '#/components/schemas/BookingListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -988,6 +991,7 @@ paths:
                 $ref: '#/components/schemas/BookingListResponse'
           x-verification:
             basis: inference
+            observedAt: '2026-09-28'
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -2607,6 +2611,8 @@ components:
       required:
         - adid
       properties:
+        httpstatuscode:
+          type: integer
         adid:
           type: integer
           description: Buchungsnummer
@@ -2633,29 +2639,45 @@ components:
           type: number
           description: Mehrwertsteuer in %
         debitaccount:
-          type: string
+          type:
+            - integer
+            - string
           description: Sollkonto
         creditaccount:
-          type: string
+          type:
+            - integer
+            - string
           description: Habenkonto
         taxaccount:
-          type: string
+          type:
+            - integer
+            - string
           description: Steuerkonto
         accountreference:
-          type: string
+          type:
+            - integer
+            - string
           description: Belegart
         accountreferenceid:
-          type: integer
+          type: string
           description: Belegnr
         costtype:
           type: string
           description: Gebührenbereich
         spid:
-          type: integer
+          type: string
           description: Sphäre
         bookingerror:
           type: integer
           description: Wert =1 -> Buchung ist fehlerhaft
+        invoiceid:
+          type: string
+        recordtype:
+          type: string
+        spbid:
+          type: integer
+        splitbookingtext:
+          type: string
     AddBookingRequest:
       type: object
       required:
@@ -2760,6 +2782,9 @@ components:
           type: string
     BookingListResponse:
       type: object
+      properties:
+        httpstatuscode:
+          type: integer
       patternProperties:
         '^[0-9]+$':
           $ref: '#/components/schemas/Booking'
