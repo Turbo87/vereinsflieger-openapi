@@ -1128,6 +1128,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /sale/list/modified:
+    post:
+      operationId: listModifiedSales
+      summary: Liste der Verkäufe auslesen (Zuletzt geändert)
+      description: Auflistung aller Verkäufe der letzten x Tage
+      tags:
+        - Allgemeiner Verkauf
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListModifiedSalesRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2709,3 +2739,16 @@ components:
         paymentmode:
           type: integer
           description: Zahlungsart (nur bei Verwendung des Kassenbuchs).
+    ListModifiedSalesRequest:
+      type: object
+      required:
+        - accesstoken
+        - days
+      properties:
+        accesstoken:
+          type: string
+        days:
+          type: integer
+          minimum: 1
+          maximum: 28
+          description: Anzahl der Tage (1 – 28)
