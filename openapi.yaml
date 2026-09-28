@@ -1218,6 +1218,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /sale/add:
+    post:
+      operationId: addSale
+      summary: Verkauf anlegen
+      description: Anlage eines neuen Verkaufs
+      tags:
+        - Allgemeiner Verkauf
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddSaleRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -2831,3 +2861,57 @@ components:
       properties:
         accesstoken:
           type: string
+    AddSaleRequest:
+      type: object
+      required:
+        - accesstoken
+        - bookingdate
+        - articleid
+        - amount
+      properties:
+        accesstoken:
+          type: string
+        bookingdate:
+          type: string
+          format: date
+          description: Datum im Format YYYY-mm-dd
+        articleid:
+          type: string
+          description: Artikelnummer
+        amount:
+          type: number
+          description: Menge
+        memberid:
+          type: integer
+          description: Mitgliedsnummer des Käufers
+        callsign:
+          type: string
+          description: Callsign bzw. Verwendung
+        salestax:
+          type: number
+          description: Steuer
+        totalprice:
+          type: number
+          description: Bruttopreis
+        counter:
+          type: number
+          description: Zählerstand
+        comment:
+          type: string
+          description: Kommenar
+        costtype:
+          type: string
+          description: Gebührenbereich
+        caid2:
+          type: integer
+          description: id des Habenkontos (muss ein Aufwand- oder Ertragskonto sein)
+        spid:
+          type: integer
+          description: Sphäre
+        paymentmode:
+          type: integer
+          enum: [0, 1, 2, 4, 5, 6, 7, 8]
+          description: >-
+            Zahlungsart (nur bei Verwendung des Kassenbuchs). Gültige Werte
+            hier sind: 0 – Nicht im Kassenbuch auflisten, 1=Barkasse,
+            2=EC-Zahlung, 4 – 8 =Frei belegbare Zahlungsarten.
