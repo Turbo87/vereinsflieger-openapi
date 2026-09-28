@@ -377,6 +377,36 @@ paths:
           description: Nicht Authentifiziert
           x-verification:
             basis: documentation
+  /flight/list/plane:
+    post:
+      operationId: listPlaneFlights
+      summary: Die letzten Flüge für ein LFZ auslesen
+      description: Auflistung der letzten X Flüge zu einem Callsign
+      tags:
+        - Flugdatenerfassung
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListPlaneFlightsRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightListResponse'
+          x-verification:
+            basis: inference
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
 components:
   schemas:
     AccessTokenResponse:
@@ -1009,6 +1039,23 @@ components:
           type: string
           format: date
           description: Datum im Format YYYY-mm-dd
+    ListPlaneFlightsRequest:
+      type: object
+      required:
+        - accesstoken
+        - callsign
+        - count
+      properties:
+        accesstoken:
+          type: string
+        callsign:
+          type: string
+          description: Callsign des LFZ
+        count:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Anzahl der Flüge (1 – 100)
     FlightListResponse:
       type: object
       properties:
