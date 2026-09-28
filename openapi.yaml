@@ -14,6 +14,7 @@ x-source-document-date: '2026-09-11'
 tags:
   - name: Anmeldefunktionen
   - name: Mitglieder
+  - name: Flugdatenerfassung
 paths:
   /auth/accesstoken:
     get:
@@ -147,6 +148,43 @@ paths:
           x-verification:
             basis: documentation
             observedAt: '2026-09-28'
+        '400':
+          description: Ungültige Anfrage
+          x-verification:
+            basis: documentation
+        '401':
+          description: Nicht Authentifiziert
+          x-verification:
+            basis: documentation
+  /flight/get/{flid}:
+    post:
+      operationId: getFlight
+      summary: Flug auslesen
+      description: Flug auslesen
+      tags:
+        - Flugdatenerfassung
+      parameters:
+        - name: flid
+          in: path
+          required: true
+          description: Eindeutige Flugnummer
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GetFlightRequest'
+      responses:
+        '200':
+          description: Erfolgreich
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightResponse'
+          x-verification:
+            basis: documentation
         '400':
           description: Ungültige Anfrage
           x-verification:
@@ -461,3 +499,155 @@ components:
           type: string
         name:
           type: string
+    GetFlightRequest:
+      type: object
+      required:
+        - accesstoken
+      properties:
+        accesstoken:
+          type: string
+    FlightResponse:
+      type: object
+      required:
+        - flid
+      properties:
+        flid:
+          type: integer
+          description: Eindeutige Flugnummer
+        createtime:
+          type: string
+          description: Datum der Erstellung
+        modifytime:
+          type: string
+          description: Datum der letzten Änderung
+        apid:
+          type: integer
+          description: Eindeutige LFZ-Nummer
+        callsign:
+          type: string
+          description: LFZ-Kennzeichen
+        uidpilot:
+          type: integer
+          description: Eindeutige Benutzernummer des Piloten
+        pilotname:
+          type: string
+          description: Pilot
+        pilotmemberid:
+          type: integer
+          description: Mitgliedsnummer des Piloten im Verein
+        uidattendant:
+          type: integer
+          description: Eindeutige Benutzernummer des Begleiters / FI
+        attendantname:
+          type: string
+          description: Begleiter / FI
+        attendantmemberid:
+          type: integer
+          description: Mitgliedsnummer des Begleiters im Verein
+        uidattendant2:
+          type: integer
+          description: Eindeutige Benutzernummer des 2. Begleiters
+        attendantname2:
+          type: string
+          description: Begleiter
+        uidattendant3:
+          type: integer
+          description: Eindeutige Benutzernummer des 3. Begleiters
+        attendantname3:
+          type: string
+          description: Begleiter
+        uidfi:
+          type: integer
+          description: Eindeutige Benutzernummer (Flugauftrag von)
+        finame:
+          type: string
+          description: Flugauftrag von
+        uidcharge:
+          type: integer
+          description: Eindeutige Benutzernummer (Anderes Mitglied zahlt)
+        dateofflight:
+          type: string
+          description: Flugdatum
+        departuretime:
+          type: string
+          description: Abflugzeit
+        departurelocation:
+          type: string
+          description: Startort
+        arrivaltime:
+          type: string
+          description: Landezeit
+        arrivallocation:
+          type: string
+          description: Landeort
+        flighttime:
+          type: integer
+          description: Flugzeit
+        landingcount:
+          type: integer
+          description: Anzahl der Landungen
+        starttype:
+          type: integer
+          description: Startart (1=Eigenstart,3=F-Schlepp,5=Winde,7=Gummiseil,9=Fahrzeug)
+        comment:
+          type: string
+          description: Kommentar
+        flightmode:
+          type: integer
+          description: Flugmodus (1=Lokal, 2=Abflug, 3=Landung, 4=Fremd)
+        ftid:
+          type: integer
+          description: Id der Flugart (Siehe Stammdaten Flugarten)
+        offblock:
+          type: string
+          description: OffBlock-Zeit
+        onblock:
+          type: string
+          description: OnBlock-Zeit
+        motorstart:
+          type: number
+          description: Motorzählerstand bei Start. Angabe in Industriestunden.
+        motorend:
+          type: number
+          description: Motorzählerstand bei Landung. Angabe in Industriestunden.
+        blocktime:
+          type: integer
+          description: Blockzeit
+        flidtow:
+          type: integer
+          description: Eindeutige Flugnummer des zugehörigen Schleppfluges
+        chargemode:
+          type: integer
+          description: >-
+            Abrechnungsmodus(1=Keine, 2=Pilot, 3=Begleiter, 4=Gastflug,
+            5=Pilot+Begleiter, 6=Gastflug (Pilot zahlt), 7=Anderes Mitglied,
+            8=Über SF, 9=Landegebühr)
+        wid:
+          type: integer
+          description: Id der Winde
+        uidwinch:
+          type: integer
+          description: Windenfahrer
+        planetype:
+          type: string
+          description: Luftfahrzeugart (Segelflugzeug, Reisemotorsegler, Ultraleicht …)
+        invoiceinfo:
+          type: array
+          description: Fluggebühren (nach der Abrechnung verfügbar)
+          items:
+            $ref: '#/components/schemas/FlightInvoiceItem'
+    FlightInvoiceItem:
+      type: object
+      properties:
+        uid:
+          type: integer
+          description: Benutzernummer
+        adid:
+          type: integer
+          description: ID der Buchungsnummer
+        name:
+          type: string
+          description: Name
+        value:
+          type: number
+          description: Brutto Abrechnungsbetrag
